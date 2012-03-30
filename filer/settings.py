@@ -21,3 +21,57 @@ FILER_PRIVATEMEDIA_ROOT = os.path.abspath( os.path.join(settings.MEDIA_ROOT, FIL
 FILER_ADMIN_ICON_SIZES = (
         '16', '32', '48', '64', 
 )
+
+# Public media (media accessible without any permission checks)
+FILER_PUBLICMEDIA_STORAGE = load_object(getattr(
+                    settings,
+                    'FILER_PUBLICMEDIA_STORAGE',
+                    storage_factory(
+                        klass=PublicFileSystemStorage,
+                        location=os.path.abspath(
+                            os.path.join(settings.MEDIA_ROOT,
+                                         'filer')),
+                        base_url=urlparse.urljoin(settings.MEDIA_URL,
+                                                  'filer/')
+                    )))
+FILER_PUBLICMEDIA_UPLOAD_TO = load_object(getattr(settings, 'FILER_PUBLICMEDIA_UPLOAD_TO', 'filer.utils.generate_filename.by_date'))
+FILER_PUBLICMEDIA_THUMBNAIL_STORAGE = load_object(getattr(
+                    settings,
+                    'FILER_PUBLICMEDIA_THUMBNAIL_STORAGE',
+                    storage_factory(
+                        klass=PublicFileSystemStorage,
+                        location=os.path.abspath(
+                            os.path.join(settings.MEDIA_ROOT,
+                                         'filer_thumbnails')),
+                        base_url=urlparse.urljoin(settings.MEDIA_URL,
+                                                  'filer_thumbnails/')
+                    )))
+
+
+# Private media (media accessible through permissions checks)
+FILER_PRIVATEMEDIA_STORAGE = load_object(getattr(
+                    settings,
+                    'FILER_PRIVATEMEDIA_STORAGE',
+                    storage_factory(
+                        klass=PrivateFileSystemStorage,
+                        location=os.path.abspath(
+                            os.path.join(settings.MEDIA_ROOT,
+                                         '../smedia/filer/')),
+                        base_url=urlparse.urljoin(settings.MEDIA_URL,
+                                                  '/smedia/filer/')
+                    )))
+FILER_PRIVATEMEDIA_UPLOAD_TO = load_object(getattr(settings, 'FILER_PRIVATEMEDIA_UPLOAD_TO',
+                                       'filer.utils.generate_filename.by_date'))
+FILER_PRIVATEMEDIA_THUMBNAIL_STORAGE = load_object(getattr(
+                    settings,
+                   'FILER_PRIVATEMEDIA_THUMBNAIL_STORAGE',
+                    storage_factory(
+                        klass=PrivateFileSystemStorage,
+                        location=os.path.abspath(
+                            os.path.join(settings.MEDIA_ROOT,
+                                         '../smedia/filer_thumbnails/')),
+                        base_url=urlparse.urljoin(settings.MEDIA_URL,
+                                                  '/smedia/filer_thumbnails/')
+                    )))
+FILER_PRIVATEMEDIA_SERVER = getattr(settings, 'FILER_PRIVATEMEDIA_SERVER', DefaultServer())
+FILER_PRIVATEMEDIA_THUMBNAIL_SERVER = getattr(settings, 'FILER_PRIVATEMEDIA_THUMBNAIL_SERVER', DefaultServer())
